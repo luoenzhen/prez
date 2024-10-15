@@ -1,0 +1,45 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ex: <https://example.com/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:Catalog
+    a dcat:Catalog ;
+    dcterms:title "Testing of Nesting"@en ;
+    dcterms:hasPart ex:Dataset .
+
+ex:CatalogOne dcterms:hasPart ex:Dataset .
+
+ex:Dataset
+    a dcat:Dataset ;
+    dcterms:title "Datanest"@en ;
+    dcterms:description "The nesting that keeps you guessing" ;
+    ex:nestedForms ex:NestedFormOne , ex:NestedFormTwo ;
+    ex:nestedBlankNodes _:bn1 ;
+    .
+
+ex:NestedFormOne a ex:NestedForm ;
+    rdfs:label "A nesting test case to detest" ;
+    dcterms:description "lest you forget to nest - a mess!" ;
+    ex:secondProp "form one second prop value" ;
+    ex:firstProp "form one first prop value" ;
+    .
+
+ex:NestedFormOne a ex:NestedForm ;
+    rdfs:label "A nesting test case to detest" ;
+    dcterms:description "nesting is best, forget the rest" ;
+    ex:secondProp "form two second prop value" ;
+    ex:firstProp "form two first prop value" ;
+    .
+
+ex:firstProp rdfs:label "First Prop" .
+ex:secondProp rdfs:label "Second Prop" .
+
+_:bn1 ex:nestedBNPropOne "nested bn prop one value" ;
+    ex:nestedBNPropTwo "nested bn prop two value" ;
+    .
+
+ex:nestedBNPropOne rdfs:label "nested bnode prop 1" .
+ex:nestedBNPropTwo rdfs:label "nested bnode prop 2" .
