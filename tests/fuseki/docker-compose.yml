@@ -1,0 +1,19 @@
+services:
+  fuseki:
+    image: ghcr.io/zazuko/fuseki-geosparql
+    environment:
+      - DISABLE_OTEL=true
+    ports:
+      - 6001:3030
+    volumes:                                                                                                                                                                                                      
+      - type: bind                                                                                                                                                                                                
+        source: ./config.ttl
+        target: /fuseki/config.ttl
+      - type: bind
+        source: ./tdb
+        target: /fuseki/databases/test
+    healthcheck:
+      test: wget --no-verbose --spider http://localhost:3030/$/ping
+      interval: 3s
+      timeout: 5s
+      retries: 5
