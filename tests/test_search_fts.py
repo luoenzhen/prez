@@ -43,5 +43,7 @@ def test_fts_single_predicate(client: TestClient):
     query with just one search predicate.
     """
 
+    # BUG: potential issue with local_settings not being respected
+
     response = client.get("/search", params={"q": "demo"})
     assert response.status_code == 200
