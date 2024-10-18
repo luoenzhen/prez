@@ -2,10 +2,12 @@ from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
+from rdflib.namespace import RDFS, SKOS
 from testcontainers.compose import DockerCompose
 
 from prez.app import assemble_app
 from prez.config import Settings
+from prez.enums import SearchMethod
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -23,13 +25,15 @@ def tc_compose(request: pytest.FixtureRequest):
 @pytest.fixture(scope="module")
 def client(tc_compose: DockerCompose):
     port = tc_compose.get_service_port("fuseki")
-    local_settings: Settings = Settings(
+    local_settings = Settings(
         _env_file=None,
-        sparql_endpoint=f"http://localhost:{port}/ds",
-        sparql_repo_type="remote",
+        sparql_endpoint=f"http://localhost:{port}/testtdb",
+        search_method=SearchMethod.fts_fuseki,
+        search_predicates=[RDFS.label, SKOS.prefLabel],
     )
     app = assemble_app(local_settings=local_settings)
-    return TestClient(app)
+    with TestClient(app) as client:
+        yield client
 
 
 def test_fts_single_predicate(client: TestClient):
@@ -39,8 +43,5 @@ def test_fts_single_predicate(client: TestClient):
     query with just one search predicate.
     """
 
-    # BUG: search endpoint not defined.
-    #      something in the lifespan event not loading the profiles
-
-    response = client.get("/search", params={"q": "sandgate"})
+    response = client.get("/search", params={"q": "demo"})
     assert response.status_code == 200
