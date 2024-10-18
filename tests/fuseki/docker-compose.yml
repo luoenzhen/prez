@@ -10,8 +10,8 @@ services:
         source: ./config.ttl
         target: /fuseki/config.ttl
       - type: bind
-        source: ./tdb
-        target: /fuseki/databases/test
+        source: ./testtdb
+        target: /fuseki/databases/testtdb
     healthcheck:
       test: wget --no-verbose --spider http://localhost:3030/$/ping
       interval: 3s

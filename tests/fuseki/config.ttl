@@ -1,18 +1,18 @@
 PREFIX :          <http://base/#>
-PREFIX dcterms:   <http://purl.org/dc/terms/>
 PREFIX fuseki:    <http://jena.apache.org/fuseki#>
 PREFIX geosparql: <http://jena.apache.org/geosparql#>
 PREFIX prez:      <https://prez.dev/>
 PREFIX rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs:      <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX schema:    <https://schema.org/>
+PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
 PREFIX tdb2:      <http://jena.apache.org/2016/tdb#>
 PREFIX text:      <http://jena.apache.org/text#>
 
 [ rdf:type  fuseki:Server ] .
 
 :service_tdb_all  rdf:type  fuseki:Service;
-        rdfs:label       "TDB2 test";
+        rdfs:label       "TDB2 testtdb";
         fuseki:dataset   :geosparql_dataset;
         fuseki:endpoint  [ fuseki:name       "query";
                            fuseki:operation  fuseki:query
@@ -32,12 +32,12 @@ PREFIX text:      <http://jena.apache.org/text#>
         fuseki:endpoint  [ fuseki:name       "update";
                            fuseki:operation  fuseki:update
                          ];
-        fuseki:name      "test" .
+        fuseki:name      "testtdb" .
 
 :geosparql_dataset  rdf:type            geosparql:geosparqlDataset;
         geosparql:applyDefaultGeometry  false;
         geosparql:dataset               :text_dataset;
-        geosparql:indexEnabled          true;
+        geosparql:indexEnabled          false;
         geosparql:indexExpires          "5000,5000,5000";
         geosparql:indexSizes            "-1,-1,-1";
         geosparql:inference             false;
@@ -49,15 +49,15 @@ PREFIX text:      <http://jena.apache.org/text#>
 
 :tdb_dataset_readwrite
         rdf:type                tdb2:DatasetTDB2;
-        tdb2:location           "/fuseki/databases/test";
+        tdb2:location           "/fuseki/databases/testtdb";
         tdb2:unionDefaultGraph  false .
 
 :index_lucene  rdf:type   text:TextIndexLucene;
         text:analyzer     [ rdf:type  text:StandardAnalyzer ];
-        text:directory    "/fuseki/databases/test";
+        text:directory    "/fuseki/databases/testtdb";
         text:entityMap    :entity_map;
         text:propLists    ( [ text:propListProp  prez:searchProps;
-                              text:props         ( dcterms:description rdfs:label )
+                              text:props         ( skos:prefLabel rdfs:label )
                             ]
                           );
         text:storeValues  true .
@@ -71,7 +71,7 @@ PREFIX text:      <http://jena.apache.org/text#>
                                text:predicate  rdfs:label
                              ]
                              [ text:field      "description";
-                               text:predicate  dcterms:description
+                               text:predicate  skos:prefLabel
                              ]
                            );
         text:uidField      "uid" .
