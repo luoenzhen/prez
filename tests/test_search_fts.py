@@ -28,7 +28,7 @@ def client(tc_compose: DockerCompose):
     local_settings = Settings(
         _env_file=None,
         sparql_endpoint=f"http://localhost:{port}/testtdb",
-        search_method=SearchMethod.fts_fuseki,
+        search_method=SearchMethod.FTS_FUSEKI,
         search_predicates=[RDFS.label, SKOS.prefLabel],
     )
     app = assemble_app(local_settings=local_settings)
@@ -36,14 +36,20 @@ def client(tc_compose: DockerCompose):
         yield client
 
 
-def test_fts_single_predicate(client: TestClient):
-    """Test FTS with one search predicate.
+def test_fts(client: TestClient):
+    """Test FTS
 
     Test that search results are returned from a full text search
-    query with just one search predicate.
+    query.
     """
 
     # BUG: potential issue with local_settings not being respected
 
     response = client.get("/search", params={"q": "demo"})
     assert response.status_code == 200
+
+
+@pytest.mark.skip(reason="Not Implemented")
+def test_fts_override(client: TestClient):
+    """Test that the search predicates can be overriden"""
+    assert True
