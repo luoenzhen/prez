@@ -88,7 +88,7 @@ Prez delivers the following endpoints:
 
 The following Environment Variables can be used to configure Prez:
 **In most cases all that is required is the SPARQL_ENDPOINT variable.**
-
+test
 These can be set in a '.env' file which will get read in via python-dotenv.
 Alternatively, set them directly in the environment from which Prez is run.
 
